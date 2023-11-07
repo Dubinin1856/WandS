@@ -1,0 +1,62 @@
+let currentRound = 1;
+let sheepSaved = 0;
+
+document.getElementById('start-button').addEventListener('click', function() {
+  startRound(currentRound);
+});
+
+function startRound(roundNumber) {
+  // Clear the field for the new round
+  const field = document.getElementById('field');
+  field.innerHTML = '';
+
+  // Add sheep and wolves to the field based on the round number
+  const sheepCount = roundNumber * 3;
+  const wolfCount = roundNumber * 2;
+
+  for (let i = 0; i < sheepCount; i++) {
+    const sheep = document.createElement('div');
+    sheep.classList.add('entity', 'sheep');
+    sheep.style.top = `${Math.random() * 350}px`;
+    sheep.style.left = `${Math.random() * 550}px`;
+    field.appendChild(sheep);
+  }
+
+  for (let i = 0; i < wolfCount; i++) {
+    const wolf = document.createElement('div');
+    wolf.classList.add('entity', 'wolf');
+    wolf.style.top = `${Math.random() * 350}px`;
+    wolf.style.left = `${Math.random() * 550}px`;
+    field.appendChild(wolf);
+  }
+
+  // Simulate sheep movement and wolf chase
+  // For simplicity, this will just be a random chance for each sheep to be saved or caught
+  const sheepEntities = document.querySelectorAll('.sheep');
+  sheepEntities.forEach(sheep => {
+    if (Math.random() > 0.5) {
+      sheepSaved++;
+      sheep.style.backgroundColor = 'green'; // Sheep is saved
+    } else {
+      sheep.style.backgroundColor = 'red'; // Sheep is caught
+    }
+  });
+
+  // Update the scoreboard and prepare for the next round
+  document.getElementById('sheep-saved').textContent = sheepSaved;
+  currentRound++;
+  if (currentRound > 2) {
+    endGame();
+  } else {
+    document.getElementById('round-number').textContent = currentRound;
+  }
+}
+
+function endGame() {
+  alert(`Game Over! You saved ${sheepSaved} sheep.`);
+  // Reset game
+  currentRound = 1;
+  sheepSaved = 0;
+  document.getElementById('round-number').textContent = currentRound;
+  document.getElementById('sheep-saved').textContent = sheepSaved;
+}
